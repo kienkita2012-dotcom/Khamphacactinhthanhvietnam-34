@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🧩 Ghép Việt Nam - Ẩm thực • Thiên nhiên • Lễ hội</title>
+    <link rel="icon" type="image/png" href="Thiết kế chưa có tên.png" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #4caf50, #2196f3);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .container {
+        max-width: 1100px;
+        width: 95%;
+        margin: 20px auto;
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+        flex: 1;
+      }
+
+      /* ==================== HEADER ==================== */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(to right, #2e7d32, #1565c0);
+        color: white;
+        padding: 15px 20px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .logo {
+        font-size: 1.35em;
+        font-weight: 700;
+      }
+
+      .menu {
+        display: flex;
+        gap: 25px;
+      }
+
+      .menu a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .hamburger {
+        display: none;
+        font-size: 1.9em;
+        cursor: pointer;
+        padding: 5px;
+      }
+
+      /* ==================== GAME CONTENT ==================== */
+      .mode-select,
+      .level-select {
+        padding: 40px 20px;
+        text-align: center;
+        background: #f1f8e9;
+      }
+
+      .mode-btn,
+      .level-btn {
+        background: #2e7d32;
+        color: white;
+        border: none;
+        padding: 18px 26px;
+        margin: 10px 5px;
+        font-size: 1.12em;
+        border-radius: 50px;
+        cursor: pointer;
+        width: 85%;
+        max-width: 300px;
+      }
+
+      .controls {
+        padding: 18px 25px;
+        background: #e8f5e9;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+
+      .game-area {
+        display: flex;
+        padding: 30px 20px;
+        gap: 25px;
+        position: relative;
+        display: flex;
+        flex-wrap: nowrap;
+      }
+
+      .column {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .title {
+        text-align: center;
+        font-size: 1.5em;
+        font-weight: 600;
+        color: #2e7d32;
+        margin-bottom: 20px;
+      }
+
+      .item {
+        background: #f8f9fa;
+        padding: 18px 16px;
+        margin: 12px 0;
+        border-radius: 16px;
+        font-size: 1.16em;
+        cursor: pointer;
+        border: 3px solid transparent;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        min-height: 74px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .item:hover {
+        transform: translateY(-4px);
+      }
+      .item.selected {
+        border-color: #ff9800;
+        background: #fff3e0;
+      }
+      .item.correct {
+        border-color: #2e7d32;
+        background: #e8f5e9;
+      }
+
+      #connections {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 10;
+      }
+
+      .progress-container {
+        height: 10px;
+        background: #eee;
+        margin: 10px 20px;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(to right, #2e7d32, #4caf50);
+        width: 0%;
+        transition: width 0.5s;
+      }
+
+      #result {
+        padding: 60px 30px;
+        text-align: center;
+        display: none;
+      }
+
+      #stars {
+        font-size: 3.8em;
+        margin: 25px 0;
+      }
+
+      /* ==================== FOOTER ==================== */
+      .main-footer {
+        background: linear-gradient(to right, #2e7d32, #1565c0);
+        color: white;
+        text-align: center;
+        padding: 28px 20px;
+        margin-top: auto;
+      }
+
+      .main-footer p {
+        margin: 6px 0;
+        opacity: 0.95;
+      }
+
+      /* ==================== RESPONSIVE ==================== */
+      @media (min-width: 768px) {
+        .container {
+          width: 92%;
+          margin: 25px auto;
+        }
+        .column {
+          min-width: 46%;
+        }
+        .game-area {
+          flex-wrap: nowrap;
+          padding: 35px 30px;
+        }
+        .item {
+          font-size: 1.22em;
+          padding: 20px 18px;
+          min-height: 78px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header {
+          padding: 14px 15px;
+        }
+        .logo {
+          font-size: 1.25em;
+        }
+        .item {
+          font-size: 1.1em;
+          min-height: 68px;
+          padding: 16px 14px;
+        }
+        .title {
+          font-size: 1.35em;
+        }
+        .mode-btn,
+        .level-btn {
+          padding: 16px 22px;
+          font-size: 1.05em;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .hamburger {
+          display: block;
+        }
+        .menu {
+          display: none;
+          flex-direction: column;
+          position: absolute;
+          top: 68px;
+          right: 15px;
+          background: #1565c0;
+          padding: 15px 25px;
+          border-radius: 12px;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+          z-index: 1100;
+        }
+        .menu.active {
+          display: flex;
+        }
+      }
+      /* ==================== NÚT HƯỚNG DẪN & MODAL ==================== */
+      .mode-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: nowrap; /* không xuống dòng */
+        justify-content: center;
+        gap: 18px;
+        max-width: 950px;
+        margin: 0 auto;
+      }
+
+      .mode-btn,
+      .guide-btn {
+        background: #2e7d32;
+        color: white;
+        border: none;
+        padding: 18px 26px;
+        font-size: 1.12em;
+        border-radius: 50px;
+        cursor: pointer;
+        flex: 1 1 220px; /* co giãn */
+        max-width: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all 0.3s;
+      }
+
+      .mode-btn:hover,
+      .guide-btn:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(46, 125, 50, 0.4);
+      }
+
+      .guide-btn {
+        background: linear-gradient(to right, #1b5e2b, #388e3c);
+        font-weight: 600;
+      }
+
+      /* Modal Hướng dẫn */
+      #guideModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.78);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+      }
+
+      .modal-content {
+        background: white;
+        max-width: 520px;
+        width: 90%;
+        border-radius: 20px;
+        padding: 35px 30px;
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+        position: relative;
+      }
+
+      .modal-content h2 {
+        color: #2e7d32;
+        text-align: center;
+        margin-bottom: 28px;
+        font-size: 1.75em;
+      }
+
+      .guide-step {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 24px;
+        font-size: 1.06em;
+        line-height: 1.55;
+      }
+
+      .guide-step span {
+        background: #e8f5e9;
+        color: #2e7d32;
+        min-width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 15px;
+        right: 25px;
+        font-size: 34px;
+        color: #999;
+        cursor: pointer;
+      }
+
+      .close-modal:hover {
+        color: #d32f2f;
+      }
+      .guide-btn {
+        display: block;
+        margin: 20px auto; /* căn giữa */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="header">
+      <div class="logo">Khám Phá Việt Nam</div>
+      <nav class="menu" id="menu">
+        <a href="../trangchinh.html">Trang Chủ</a>
+      </nav>
+      <div class="hamburger" onclick="toggleMenu()">☰</div>
+    </header>
+
+    <main class="container">
+      <div class="mode-select" id="modeMenu">
+        <h2>Chọn chủ đề</h2>
+
+        <div class="mode-buttons">
+          <button class="mode-btn" onclick="selectMode('food')">
+            🍜 Ẩm thực Đặc sản
+          </button>
+          <button class="mode-btn" onclick="selectMode('nature')">
+            🏞️ Thiên nhiên & Cảnh quan
+          </button>
+          <button class="mode-btn" onclick="selectMode('festival')">
+            🎉 Văn hóa & Lễ hội
+          </button>
+        </div>
+        <button class="guide-btn" onclick="showGuide()">
+          📖 Hướng dẫn chơi
+        </button>
+      </div>
+
+      <div class="level-select" id="levelMenu" style="display: none">
+        <h2 id="modeTitle"></h2>
+        <div id="levelButtons"></div>
+        <br />
+        <button
+          onclick="backToMode()"
+          style="
+            background: #2196f3;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.05em;
+          "
+        >
+          ← Quay lại chọn chủ đề
+        </button>
+      </div>
+
+      <div class="controls" id="controls" style="display: none">
+        <div>⏱️ Thời gian: <span id="timer">0</span>s</div>
+        <div>
+          <button onclick="resetToMode()">Chủ đề khác</button>
+          <button onclick="resetGame()">Chơi lại</button>
+        </div>
+      </div>
+
+      <div
+        class="progress-container"
+        id="progressContainer"
+        style="display: none"
+      >
+        <div id="progress" class="progress-bar"></div>
+      </div>
+
+      <div class="game-area" id="gameArea" style="display: none">
+        <svg id="connections" width="100%" height="820"></svg>
+        <div class="column">
+          <div class="title" id="leftTitle"></div>
+          <div id="leftItems"></div>
+        </div>
+        <div class="column">
+          <div class="title" id="rightTitle"></div>
+          <div id="rightItems"></div>
+        </div>
+      </div>
+
+      <div id="result">
+        <h2>
+          Hoàn thành trong
+          <span id="finalTime" style="color: #2e7d32"></span> giây!
+        </h2>
+        <div id="stars"></div>
+        <div class="message" id="meaning"></div>
+        <button
+          onclick="resetToMode()"
+          style="
+            background: #2e7d32;
+            color: white;
+            padding: 16px 42px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.12em;
+          "
+        >
+          Chơi tiếp
+        </button>
+      </div>
+      <!-- MODAL HƯỚNG DẪN -->
+      <div id="guideModal">
+        <div class="modal-content">
+          <span class="close-modal" onclick="hideGuide()">×</span>
+          <h2>📖 Hướng dẫn chơi</h2>
+
+          <div class="guide-step">
+            <span>1</span>
+            <div>
+              <strong>Chọn chủ đề</strong>: Ẩm thực Đặc sản, Thiên nhiên & Cảnh
+              quan, hoặc Văn hóa & Lễ hội.
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <span>2</span>
+            <div>
+              <strong>Chọn cấp độ</strong>: Cấp càng cao, số lượng câu hỏi càng
+              nhiều và độ khó tăng dần.
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <span>3</span>
+            <div>
+              Click vào mục bên trái, sau đó click vào mục bên phải để ghép đôi
+              đúng.
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <span>4</span>
+            <div>
+              Nếu ghép đúng, đường nối màu xanh lá sẽ xuất hiện và tiến độ tăng
+              lên.
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <span>5</span>
+            <div>
+              Hoàn thành càng nhanh càng được nhiều sao ⭐ (3 sao là xuất sắc
+              nhất).
+            </div>
+          </div>
+
+          <div
+            style="
+              text-align: center;
+              margin-top: 30px;
+              color: #2e7d32;
+              font-weight: 500;
+            "
+          >
+            Chúc bạn chơi vui và học thêm nhiều điều thú vị về Việt Nam! 🇻🇳
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="main-footer">
+      <p>© 2026 Khám Phá Việt Nam</p>
+      <p class="copyright">
+        Khám phá và lan tỏa vẻ đẹp văn hóa, thiên nhiên & ẩm thực Việt Nam
+      </p>
+    </footer>
+
+    <script>
+      // ==================== DATA GAME - SỐ CÂU TĂNG DẦN ====================
+      const data = {
+        food: {
+          title: "🍜 Ẩm thực Đặc sản",
+          leftTitle: "Món ăn / Đặc sản",
+          rightTitle: "Tỉnh / Thành phố",
+          levels: {
+            1: [
+              // 4 cặp
+              { left: "Phở 🍜", right: "Hà Nội" },
+              { left: "Bún bò 🍲", right: "Thừa Thiên Huế" },
+              { left: "Cà phê ☕", right: "Đắk Lắk" },
+              { left: "Bánh đa cua 🍝", right: "Hải Phòng" },
+            ],
+            2: [
+              // 5 cặp
+              { left: "Cơm tấm 🍚", right: "TP. Hồ Chí Minh" },
+              { left: "Mì Quảng 🍜", right: "Quảng Nam" },
+              { left: "Bánh khọt 🥟", right: "Bà Rịa – Vũng Tàu" },
+              { left: "Chả cá Lã Vọng 🐟", right: "Hà Nội" },
+              { left: "Thịt trâu gác bếp 🥩", right: "Hà Giang" },
+            ],
+            3: [
+              // 6 cặp
+              { left: "Bún chả 🍜", right: "Hà Nội" },
+              { left: "Gỏi cá trích 🐟", right: "Kiên Giang" },
+              { left: "Lẩu mắm 🍲", right: "Cà Mau" },
+              { left: "Nem nướng 🌯", right: "Khánh Hòa" },
+              { left: "Phở khô 🍜", right: "Gia Lai" },
+              { left: "Dê núi 🐐", right: "Ninh Bình" },
+            ],
+            4: [
+              // 7 cặp
+              { left: "Xôi trám 🍚", right: "Cao Bằng" },
+              { left: "Lợn cắp nách 🐷", right: "Lai Châu" },
+              { left: "Thịt trâu lá lồm 🥩", right: "Hòa Bình" },
+              { left: "Gỏi cá mè 🐟", right: "Bắc Giang" },
+              { left: "Bánh tằm bì 🍝", right: "Bạc Liêu" },
+              { left: "Kẹo dừa 🥥", right: "Bến Tre" },
+              { left: "Chả mực 🦑", right: "Quảng Ninh" },
+            ],
+            5: [
+              // 8 cặp
+              { left: "Cá nướng Ba Bể 🐟", right: "Bắc Kạn" },
+              { left: "Súp lươn 🍲", right: "Nghệ An" },
+              { left: "Bún thang lươn 🍜", right: "Hưng Yên" },
+              { left: "Thịt chua 🥩", right: "Phú Thọ" },
+              { left: "Bánh khúc 🥟", right: "Bắc Ninh" },
+              { left: "Cháo Ấu tẩu 🍲", right: "Hà Giang" },
+              { left: "Vịt quay lá móc mật 🦆", right: "Lạng Sơn" },
+              { left: "Lợn quay lá chuối 🐷", right: "Sơn La" },
+            ],
+          },
+        },
+        nature: {
+          title: "🏞️ Thiên nhiên & Cảnh quan",
+          leftTitle: "Danh lam thắng cảnh",
+          rightTitle: "Tỉnh / Thành phố",
+          levels: {
+            1: [
+              // 4 cặp
+              { left: "Vịnh Hạ Long 🏝️", right: "Quảng Ninh" },
+              { left: "Cố đô Huế 🏯", right: "Thừa Thiên Huế" },
+              { left: "Đảo Phú Quốc 🏖️", right: "Kiên Giang" },
+              { left: "Phong Nha - Kẻ Bàng 🏞️", right: "Quảng Bình" },
+            ],
+            2: [
+              // 5 cặp
+              { left: "Thác Bản Giốc 💦", right: "Cao Bằng" },
+              { left: "Phố cổ Hội An 🏘️", right: "Quảng Nam" },
+              { left: "Núi Bà Đen ⛰️", right: "Tây Ninh" },
+              { left: "Hồ Ba Bể 🏞️", right: "Bắc Kạn" },
+              { left: "Ruộng bậc thang Mù Cang Chải 🌾", right: "Yên Bái" },
+            ],
+            3: [
+              // 6 cặp
+              { left: "Thác Dray Nur 💦", right: "Đắk Lắk" },
+              { left: "Vịnh Nha Trang 🏖️", right: "Khánh Hòa" },
+              { left: "Rừng tràm Trà Sư 🌳", right: "An Giang" },
+              { left: "Núi Lang Biang ⛰️", right: "Lâm Đồng" },
+              { left: "Cao nguyên đá Đồng Văn 🪨", right: "Hà Giang" },
+              { left: "Động Thiên Đường 🕳️", right: "Quảng Bình" },
+            ],
+            4: [
+              // 7 cặp
+              { left: "Biển Mỹ Khê 🏖️", right: "Đà Nẵng" },
+              { left: "Phansipan ⛰️", right: "Lào Cai" },
+              { left: "Thung lũng Mường Hoa 🏞️", right: "Lào Cai" },
+              { left: "Đảo Lý Sơn 🏝️", right: "Quảng Ngãi" },
+              { left: "Thác Prenn 💦", right: "Lâm Đồng" },
+              { left: "Hang Sơn Đoòng 🕳️", right: "Quảng Bình" },
+              { left: "Vườn quốc gia Cúc Phương 🌳", right: "Ninh Bình" },
+            ],
+            5: [
+              // 8 cặp
+              { left: "Biển Cát Bà 🏖️", right: "Hải Phòng" },
+              { left: "Thác Bản Giốc 💦", right: "Cao Bằng" },
+              { left: "Núi Yên Tử 🏔️", right: "Quảng Ninh" },
+              { left: "Hồ Thác Bà 🏞️", right: "Yên Bái" },
+              { left: "Đèo Ô Quy Hồ ⛰️", right: "Lào Cai" },
+              { left: "Rừng ngập mặn Cần Giờ 🌿", right: "TP. Hồ Chí Minh" },
+              { left: "Vườn quốc gia Ba Vì 🌳", right: "Hà Nội" },
+              { left: "Suối Mơ 💦", right: "Bình Thuận" },
+            ],
+          },
+        },
+        festival: {
+          title: "🎉 Văn hóa & Lễ hội",
+          leftTitle: "Lễ hội",
+          rightTitle: "Tỉnh / Thành phố",
+          levels: {
+            1: [
+              // 4 cặp
+              { left: "Lễ hội Đền Hùng 🙏", right: "Phú Thọ" },
+              { left: "Festival Huế 🎭", right: "Thừa Thiên Huế" },
+              { left: "Hội Lim 🎤", right: "Bắc Ninh" },
+              { left: "Lễ hội Kate 🌺", right: "Ninh Thuận" },
+            ],
+            2: [
+              // 5 cặp
+              { left: "Lễ hội Chùa Hương 🛕", right: "Hà Nội" },
+              { left: "Lễ hội Bà Chúa Xứ 🙏", right: "An Giang" },
+              { left: "Lễ hội Gióng 🐎", right: "Hà Nội" },
+              { left: "Lễ hội Hoa Lư 🌸", right: "Ninh Bình" },
+              { left: "Lễ hội Tháp Bà Ponagar 🛕", right: "Khánh Hòa" },
+            ],
+            3: [
+              // 6 cặp
+              { left: "Lễ hội Nghinh Ông ⛵", right: "Bà Rịa – Vũng Tàu" },
+              { left: "Hội chùa Dâu 🛕", right: "Bắc Ninh" },
+              { left: "Lễ hội Lồng Tồng 🌾", right: "Cao Bằng" },
+              { left: "Lễ hội đâm trâu 🐃", right: "Đắk Lắk" },
+              { left: "Lễ hội Yên Tử 🏔️", right: "Quảng Ninh" },
+              { left: "Lễ hội Cầu Ngư ⛵", right: "Quảng Ngãi" },
+            ],
+            4: [
+              // 7 cặp
+              { left: "Lễ hội Trung thu lớn 🎉", right: "Bình Thuận" },
+              { left: "Lễ hội Then 🎶", right: "Cao Bằng" },
+              { left: "Lễ hội Cơm mới 🍚", right: "Sơn La" },
+              { left: "Lễ hội Xòe Thái 💃", right: "Điện Biên" },
+              { left: "Lễ hội Cầu mưa 🌧️", right: "Lai Châu" },
+              { left: "Lễ hội Háu Sla 🎉", right: "Hà Giang" },
+              { left: "Lễ hội Lồng đèn 📍", right: "Lào Cai" },
+            ],
+            5: [
+              // 8 cặp
+              { left: "Lễ hội Quan Họ 🎤", right: "Bắc Ninh" },
+              { left: "Lễ hội Chọi trâu 🐃", right: "Hà Nam" },
+              { left: "Lễ hội Đua thuyền 🛶", right: "An Giang" },
+              { left: "Lễ hội Cồng chiêng 🥁", right: "Đắk Lắk" },
+              { left: "Lễ hội Té nước 💦", right: "Lai Châu" },
+              { left: "Lễ hội Ném còn 🎾", right: "Cao Bằng" },
+              { left: "Lễ hội Hát Then 🎶", right: "Tuyên Quang" },
+              { left: "Lễ hội Ruộng bậc thang 🌾", right: "Yên Bái" },
+            ],
+          },
+        },
+      };
+
+      // ==================== GAME LOGIC ====================
+      let currentMode = null;
+      let currentLevel = 1;
+      let pairs = [];
+      let selectedLeft = null;
+      let connections = [];
+      let timerInterval = null;
+      let seconds = 0;
+      let isPlaying = false;
+      let matched = new Set();
+
+      const modeMenu = document.getElementById("modeMenu");
+      const levelMenu = document.getElementById("levelMenu");
+      const gameArea = document.getElementById("gameArea");
+      const leftItems = document.getElementById("leftItems");
+      const rightItems = document.getElementById("rightItems");
+      const svg = document.getElementById("connections");
+      const timerEl = document.getElementById("timer");
+      const progressEl = document.getElementById("progress");
+      const resultDiv = document.getElementById("result");
+      const finalTimeEl = document.getElementById("finalTime");
+      const starsDiv = document.getElementById("stars");
+      const meaningDiv = document.getElementById("meaning");
+
+      function selectMode(mode) {
+        currentMode = mode;
+        const d = data[mode];
+        document.getElementById("modeTitle").textContent = d.title;
+        modeMenu.style.display = "none";
+        levelMenu.style.display = "block";
+
+        const btnContainer = document.getElementById("levelButtons");
+        btnContainer.innerHTML = "";
+        for (let i = 1; i <= 5; i++) {
+          const btn = document.createElement("button");
+          btn.className = "level-btn";
+          btn.textContent = `Cấp ${i}`;
+          btn.onclick = () => startLevel(i);
+          if (!d.levels[i] || d.levels[i].length === 0) btn.disabled = true;
+          btnContainer.appendChild(btn);
+        }
+      }
+
+      function backToMode() {
+        levelMenu.style.display = "none";
+        modeMenu.style.display = "block";
+      }
+
+      function startLevel(level) {
+        currentLevel = level;
+        const d = data[currentMode];
+        pairs = d.levels[level] || [];
+        if (pairs.length === 0) {
+          alert("Cấp độ này đang được cập nhật thêm!");
+          return;
+        }
+
+        levelMenu.style.display = "none";
+        document.getElementById("controls").style.display = "flex";
+        document.getElementById("progressContainer").style.display = "block";
+        gameArea.style.display = "flex";
+
+        document.getElementById("leftTitle").textContent = d.leftTitle;
+        document.getElementById("rightTitle").textContent = d.rightTitle;
+
+        connections = [];
+        matched.clear();
+        progressEl.style.width = "0%";
+        isPlaying = true;
+        createItems();
+        startTimer();
+      }
+
+      function createItems() {
+        leftItems.innerHTML = "";
+        rightItems.innerHTML = "";
+        svg.innerHTML = "";
+
+        pairs.forEach((pair) => {
+          const div = document.createElement("div");
+          div.className = "item";
+          div.innerHTML = pair.left;
+          div.onclick = () => selectLeft(div, pair);
+          leftItems.appendChild(div);
+        });
+
+        const shuffledRight = [...pairs.map((p) => p.right)].sort(
+          () => Math.random() - 0.5,
+        );
+        shuffledRight.forEach((right) => {
+          const div = document.createElement("div");
+          div.className = "item";
+          div.innerHTML = `🏠 ${right}`;
+          div.onclick = () => selectRight(div, right);
+          rightItems.appendChild(div);
+        });
+      }
+
+      function selectLeft(element, pair) {
+        if (!isPlaying || matched.has(pair.left)) return;
+        document
+          .querySelectorAll("#leftItems .item")
+          .forEach((el) => el.classList.remove("selected"));
+        selectedLeft = { element, pair };
+        element.classList.add("selected");
+      }
+
+      function selectRight(element, right) {
+        if (!isPlaying || !selectedLeft || matched.has(selectedLeft.pair.left))
+          return;
+
+        if (selectedLeft.pair.right === right) {
+          element.classList.add("correct");
+          selectedLeft.element.classList.add("correct");
+          matched.add(selectedLeft.pair.left);
+
+          connections.push({ leftEl: selectedLeft.element, rightEl: element });
+          drawConnection(selectedLeft.element, element);
+          updateProgress();
+
+          if (connections.length === pairs.length) {
+            setTimeout(endGame, 600);
+          }
+        } else {
+          element.style.animation = "shake 0.4s";
+          setTimeout(() => (element.style.animation = ""), 400);
+        }
+
+        selectedLeft = null;
+        document
+          .querySelectorAll("#leftItems .item")
+          .forEach((el) => el.classList.remove("selected"));
+      }
+
+      function drawConnection(leftEl, rightEl) {
+        const rect1 = leftEl.getBoundingClientRect();
+        const rect2 = rightEl.getBoundingClientRect();
+        const areaRect = gameArea.getBoundingClientRect();
+
+        const x1 = rect1.left + rect1.width / 2 - areaRect.left;
+        const y1 = rect1.top + rect1.height / 2 - areaRect.top;
+        const x2 = rect2.left + rect2.width / 2 - areaRect.left;
+        const y2 = rect2.top + rect2.height / 2 - areaRect.top;
+
+        const line = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "line",
+        );
+        line.setAttribute("x1", x1);
+        line.setAttribute("y1", y1);
+        line.setAttribute("x2", x2);
+        line.setAttribute("y2", y2);
+        line.setAttribute("stroke", "#4caf50");
+        line.setAttribute("stroke-width", "7");
+        line.setAttribute("stroke-linecap", "round");
+        svg.appendChild(line);
+      }
+
+      function updateProgress() {
+        const percent = (connections.length / pairs.length) * 100;
+        progressEl.style.width = percent + "%";
+      }
+
+      function startTimer() {
+        seconds = 0;
+        timerEl.textContent = "0";
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+          seconds++;
+          timerEl.textContent = seconds;
+        }, 1000);
+      }
+
+      function endGame() {
+        isPlaying = false;
+        clearInterval(timerInterval);
+        gameArea.style.display = "none";
+        document.getElementById("controls").style.display = "none";
+        document.getElementById("progressContainer").style.display = "none";
+        resultDiv.style.display = "block";
+
+        finalTimeEl.textContent = seconds;
+
+        let stars = 3;
+        if (seconds > 100) stars = 1;
+        else if (seconds > 70) stars = 2;
+
+        starsDiv.innerHTML =
+          "⭐".repeat(stars) + '<span style="color:#ddd">⭐'.repeat(3 - stars);
+
+        meaningDiv.innerHTML = `
+                <strong>Ý nghĩa trò chơi:</strong> Qua việc ghép đôi, bạn đã khám phá vẻ đẹp đa dạng của Việt Nam – từ những món ăn đặc sản đậm đà, thiên nhiên hùng vĩ đến các lễ hội văn hóa phong phú.<br><br>
+                <strong>🇻🇳 Việt Nam</strong> là đất nước có di sản thiên nhiên và văn hóa được UNESCO công nhận. Mỗi vùng miền đều mang bản sắc riêng, góp phần tạo nên sức sống và sức hút của dân tộc.<br><br>
+                Hãy tự hào, khám phá và lan tỏa hình ảnh Việt Nam ra thế giới!
+            `;
+      }
+
+      function resetGame() {
+        clearInterval(timerInterval);
+        gameArea.style.display = "none";
+        document.getElementById("controls").style.display = "none";
+        document.getElementById("progressContainer").style.display = "none";
+        resultDiv.style.display = "none";
+        if (currentMode) startLevel(currentLevel);
+      }
+
+      function resetToMode() {
+        clearInterval(timerInterval);
+        gameArea.style.display = "none";
+        document.getElementById("controls").style.display = "none";
+        document.getElementById("progressContainer").style.display = "none";
+        resultDiv.style.display = "none";
+        levelMenu.style.display = "none";
+        modeMenu.style.display = "block";
+      }
+
+      function toggleMenu() {
+        const menu = document.getElementById("menu");
+        menu.classList.toggle("active");
+      }
+
+      const style = document.createElement("style");
+      style.innerHTML = `@keyframes shake {0%,100%{transform:translateX(0)} 25%{transform:translateX(-10px)} 75%{transform:translateX(10px)}}`;
+      document.head.appendChild(style);
+
+      alert(
+        "🎉 Game đã được nâng cấp!\n\nCấp độ càng cao → số câu càng nhiều!\nChọn chủ đề và bắt đầu khám phá Việt Nam nhé! 🇻🇳",
+      );
+      function showGuide() {
+        document.getElementById("guideModal").style.display = "flex";
+      }
+
+      function hideGuide() {
+        document.getElementById("guideModal").style.display = "none";
+      }
+    </script>
+  </body>
+</html>
